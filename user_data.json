@@ -1,0 +1,16 @@
+{
+    "contacts": {
+        "Dinesh": {
+            "phone": "8945675896",
+            "email": ""
+        },
+        "sowmya": {
+            "phone": "895634598",
+            "email": "sowmya@gmail.com"
+        }
+    },
+    "user": {
+        "name": "chandan",
+        "favourite_colour": "yellow"
+    }
+}

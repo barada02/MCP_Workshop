@@ -37,19 +37,26 @@ async def chat_interaction_loop(session: ClientSession):
     Continuous chat loop that keeps conversation history.
     """
     print("\n[Client] Initializing session history...")
-    # System prompt gives the AI a personality and rules
-    messages = [
-        {
-            "role": "system", 
-            "content": "You are a helpful assistant hooked up to an external database. "
-                       "You can save user preferences and contacts. Respond conversationally."
-        }
-    ]
-
+    
     # Ask the MCP server what tools it has available
     tools_response = await session.list_tools()
     available_openai_tools = convert_mcp_to_openai_tools(tools_response.tools)
     print(f"[Client] Server provides {len(available_openai_tools)} tools.")
+    
+    # System prompt gives the AI a personality and rules
+    system_prompt = (
+        "You are a helpful assistant hooked up to an external database. "
+        "You MUST use your provided tools to save user preferences, personal details, and contacts. "
+        f"You have [{len(available_openai_tools)}] tools available to interact with the file system. "
+        "Whenever the user mentions a fact about themselves or a friend, immediately call the appropriate tool."
+    )
+    
+    messages = [
+        {
+            "role": "system", 
+            "content": system_prompt
+        }
+    ]
     
     print("\n--- Chat Started! Type 'exit' or 'quit' to stop. ---")
     
@@ -65,14 +72,21 @@ async def chat_interaction_loop(session: ClientSession):
         # We use a loop here because sometimes the AI calls a tool, gets the result,
         # but decides it needs to call ANOTHER tool before answering the user.
         while True:
-            response = await openai_client.chat.completions.create(
-                model=MODEL_NAME,
-                messages=messages,
-                tools=available_openai_tools,
-                tool_choice="auto"
-            )
-            
+            try:
+                response = await openai_client.chat.completions.create(
+                    model=MODEL_NAME,
+                    messages=messages,
+                    tools=available_openai_tools,
+                    tool_choice="auto" # Wait, some models need this explicitly set
+                )
+            except Exception as e:
+                print(f"\n[Error] The LLM Provider returned an error: {e}")
+                print("[Hint] If you hit a rate limit, try waiting a minute, or change the model in your .env file.")
+                break
+                
             response_message = response.choices[0].message
+            # We MUST append the assistant's message to the conversation history
+            # either as a text response or a tool call response
             messages.append(response_message)
         
             # If the LLM decides to call a tool (or multiple tools)
