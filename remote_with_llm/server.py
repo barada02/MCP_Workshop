@@ -19,4 +19,4 @@ if __name__ == "__main__":
     # FastMCP supports 'sse' (Server-Sent Events) for acting as a remote HTTP server
     # Note: running this requires 'uvicorn' and 'starlette' (pip install uvicorn starlette)
     print("Starting Remote MCP Server on http://localhost:8000/sse")
-    mcp.run(transport="sse", port=8000)
+    mcp.run(transport="sse")
