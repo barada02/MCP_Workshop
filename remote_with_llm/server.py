@@ -64,5 +64,15 @@ def save_contact(name: str, phone: str = "", email: str = "") -> str:
 if __name__ == "__main__":
     # FastMCP supports 'sse' (Server-Sent Events) for acting as a remote HTTP server
     # Note: running this requires 'uvicorn' and 'starlette' (pip install uvicorn starlette)
+    import sys
     print("Starting Remote MCP Server on http://localhost:8000/sse")
-    mcp.run(transport="sse")
+    print("Press CTRL+C to close.")
+    
+    try:
+        mcp.run(transport="sse")
+    except KeyboardInterrupt:
+        print("\nShutting down server gracefully...")
+        sys.exit(0)
+    except Exception as e:
+        print(f"\nServer stopped unexpectedly: {e}")
+        sys.exit(1)
