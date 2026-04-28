@@ -9,12 +9,12 @@ We will build a **"System & Notes Assistant" MCP Server**. It will allow an AI t
 2. **Execute Basic System Checks (Tools):** Get system stats (e.g., current time, OS info).
 3. **Provide Formatting Templates (Prompts):** Provide predefined prompts for summarizing notes or generating reports.
 
-*(We can use either Python or TypeScript. We will decide in Phase 1).*
+*(We will use Python for this project).*
 
 ## Step-by-Step Plan
 
 ### Phase 1: Setup and Basics
-- [ ] Choose the language stack (Python or TypeScript).
+- [x] Choose the language stack (Python).
 - [ ] Initialize the project and install the official MCP SDK dependencies.
 - [ ] Set up the basic MCP Server lifecycle (initialization, starting the stdio transport).
 
