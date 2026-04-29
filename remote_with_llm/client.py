@@ -42,7 +42,9 @@ async def chat_interaction_loop(session: ClientSession):
     tools_response = await session.list_tools()
     available_openai_tools = convert_mcp_to_openai_tools(tools_response.tools)
     print(f"[Client] Server provides {len(available_openai_tools)} tools.")
-    
+    print(f"[Client] Tools: {[tool['function']['name'] for tool in available_openai_tools]}")
+    #print(f"[Client] tools: {json.dumps(available_openai_tools, indent=2)}")
+
     # System prompt gives the AI a personality and rules
     system_prompt = (
         "You are a helpful assistant hooked up to an external database. "
